@@ -47,10 +47,10 @@ pipeline {
         stage('Helm') {
             
             steps {
+                if( GIT_BRANCH ==~ feature-*) {
                 echo "${IMAGE_TAG}" 
-                sh '''
-                    "echo image tag is $IMAGE_TAG"
-                 '''
+                sh "echo image tag is $IMAGE_TAG"   
+                } 
 
                     
             }
