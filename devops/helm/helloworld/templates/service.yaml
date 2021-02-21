@@ -1,0 +1,19 @@
+{{- if .Values.service -}}
+{{- $Name := include "appName" . -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $Name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type | quote }}
+  ports:
+  {{- range $key := .Values.service.ports }}
+    - protocol: TCP
+{{ toYaml $key | indent 6 }}
+  {{- end }}
+  selector:
+    {{- include "app.labels" . | nindent 4 }}
+{{- end }}

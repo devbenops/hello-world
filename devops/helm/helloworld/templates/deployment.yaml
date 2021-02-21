@@ -1,0 +1,63 @@
+{{- if .Values.deployment -}}
+{{- $Name := include "appName" . -}}
+apiVersion: {{ template "app.apiVersion" . }}
+kind: {{ template "app.kind" . }}
+metadata:
+  name: {{ $Name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  selector:
+    matchLabels:
+      component: {{ .Values.deployment.labels.component }}
+      environment: {{ .Values.deployment.labels.environment }}
+      release: {{ .Release.Name }}
+{{- if .Values.strategy }}
+  strategy:
+    {{- .Values.strategy | toYaml | nindent 4 }}
+{{- end }}
+  template:
+    metadata:
+      labels:
+        component: {{ .Values.deployment.labels.component }}
+        environment: {{ .Values.deployment.labels.environment }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ $Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.Imagetag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          envFrom:
+          - configMapRef:
+             name: {{ .Values.configMap.app }}
+          ports:
+          {{- range $port := .Values.ContainerPorts }}
+            - name: {{ $port.name }}
+              containerPort: {{ $port.port }}
+          {{- end }}
+          {{- if .Values.livenessprobe.enabled }}
+          livenessProbe:
+{{ toYaml .Values.livenessProbe | indent 12 }}
+        {{- end }}
+        {{- if .Values.readinessprobe.enabled }}
+          readinessProbe:
+{{ toYaml .Values.readinessProbe | indent 12 }}
+        {{- end }}
+          {{- if .Values.resources }}
+          resources:
+            {{- .Values.resources | toYaml | nindent 12 }}
+          {{ end }}
+    {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- .Values.imagePullSecrets | toYaml | nindent 6 }}
+    {{- end }}
+    {{- if .Values.securityContext }}
+      securityContext:
+{{ toYaml .Values.securityContext | indent 8 }}
+    {{- end }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      restartPolicy: {{ .Values.restartPolicy }}
+{{- end }}

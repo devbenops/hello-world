@@ -1,0 +1,104 @@
+############## Global values #################
+deployment: 
+  labels:
+    component: helloworld
+    environment: staging
+
+namespace: backend
+
+############## Deployment values ####################
+replicaCount: 1
+
+serviceAccountName: vault-read
+
+image:
+  repository: 501875964238.dkr.ecr.eu-central-1.amazonaws.com/helloworld
+  Imagetag: imagetag
+
+  pullPolicy: IfNotPresent
+
+
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 1
+    maxUnavailable: 0
+
+configMap:
+  app: helloworld-envs
+
+resources:
+  limits:   
+    memory: 300Mi
+  requests:
+    memory: 200Mi
+
+imagePullSecrets:
+- name:  aws-ecr
+
+terminationGracePeriodSeconds: 30
+restartPolicy: Always
+revisionHistoryLimit: 10
+
+####### ingress ########
+ingress:
+
+  enabled: true
+
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+
+  hosts:
+      host: staging.helloworld.com
+
+  # tls:
+  #   secretName: tls-secret
+  #   hosts: staging.helloworld.com
+
+##### service values #######
+service:
+  type: ClusterIP
+  ports:
+    http:
+      port: 8080
+      targetPort: 8080
+      name: http
+
+#### ContainerPorts ####
+ContainerPorts:
+  port1:
+    name: http 
+    port: 8080
+
+### Liveness probe ###
+livenessprobe:
+  enabled: true
+livenessProbe:
+  failureThreshold: 1
+  httpGet:
+    path: /actuator/health
+    port: 8080
+    scheme: HTTP
+  initialDelaySeconds: 60
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 5
+
+### Readiness Probe ###
+readinessprobe:
+  enabled: true
+readinessProbe:
+  failureThreshold: 3
+  httpGet:
+    path: /actuator/health
+    port: 8080
+    scheme: HTTP
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 5
+
+###### ENV variables #######
+env:
+  ENV: "staging"

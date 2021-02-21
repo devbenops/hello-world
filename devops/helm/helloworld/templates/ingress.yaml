@@ -1,0 +1,38 @@
+{{- if .Values.ingress -}}
+{{- $Name := include "appName" . -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ $Name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+  {{- if .Values.ingress.annotations }}
+  annotations:
+    {{- .Values.ingress.annotations | toYaml | nindent 4 }}
+  {{- end }}
+spec:
+  rules:
+    - host: {{ .Values.ingress.hosts.host | quote }}
+      http:
+        paths:
+        - backend:
+            serviceName: {{ $Name }}
+            servicePort: {{ .Values.service.ports.http.port }}
+        {{- if .Values.ingress.backend2 }}
+        {{- range $backend2 := .Values.ingress.backend2 }}
+        - backend:
+            serviceName: {{ $backend2.name }}
+            servicePort: {{ $backend2.port }}
+          path: {{ $backend2.path }}
+        {{- end }}
+        {{- end }}
+##  if we terminate tls at ingress level
+   
+# {{- if .Values.ingress.tls }}
+#   tls:
+#   - hosts:
+#     - {{ .Values.ingress.tls.hosts | quote }}
+#     secretName: {{ .Values.ingress.tls.secretName | quote }}
+# {{- end }}
+{{- end }}
