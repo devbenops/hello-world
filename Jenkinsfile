@@ -13,7 +13,7 @@ pipeline {
         stage('Docker') {
             steps {
            
-                sh '''
+                sh '''#!/bin/bash -x
                     set -e
                     if [[ $GIT_BRANCH =~ prod-.*[0-9].*[0-9].*[0-9] ]] || [[ $GIT_BRANCH =~ stag-.*[0-9].*[0-9].*[0-9] ]]
                     then
