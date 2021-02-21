@@ -59,7 +59,7 @@ pipeline {
 
         stage('Approval') {
                 when {
-                      expression { env.GIT_BRANCH_NAME == "master"  && env.GIT_BRANCH_NAME == "main" }
+                      expression { env.GIT_BRANCH_NAME == "master"  || env.GIT_BRANCH_NAME == "main" }
                 }
 
                 steps {
@@ -71,7 +71,7 @@ pipeline {
 
         stage('Helm-prod') {
             when {
-                      expression { env.GIT_BRANCH_NAME == "master" && env.GIT_BRANCH_NAME == "main" }
+                      expression { env.GIT_BRANCH_NAME == "master" || env.GIT_BRANCH_NAME == "main" }
                 }
             
             steps {
