@@ -41,13 +41,18 @@ pipeline {
                 '''
             }
         }
-        // stage('Helm') {
-        //     steps {
-        //         sh '''
+        stage('Helm') {
+            steps {
+                sh '''#!/bin/bash -x
+                    set -e
+                    echo "image tag is $IMAGE_TAG"
+
+
+
     
-        //         '''
-        //     }
-        // }
+                '''
+            }
+        }
 
 //         stage('Deploy') {
 //             steps {
