@@ -50,10 +50,10 @@ spec:
           resources:
             {{- .Values.resources | toYaml | nindent 12 }}
           {{ end }}
-    {{- if .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- .Values.imagePullSecrets | toYaml | nindent 6 }}
-    {{- end }}
+    # {{- if .Values.imagePullSecrets }}
+    #   imagePullSecrets:
+    #     {{- .Values.imagePullSecrets | toYaml | nindent 6 }}
+    # {{- end }}
     {{- if .Values.securityContext }}
       securityContext:
 {{ toYaml .Values.securityContext | indent 8 }}
