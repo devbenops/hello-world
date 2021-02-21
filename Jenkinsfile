@@ -46,7 +46,10 @@ pipeline {
                 echo "${IMAGE_TAG}" // prints 'hotness'
             }
         }
-        stage('Helm') {
+        stage('Helm-staging') {
+            when {
+                      expression { env.GIT_BRANCH_NAME == "feature-hello-world" }
+                }
             
             steps {
                 script {
@@ -55,35 +58,42 @@ pipeline {
                        sh "echo image tag is $IMAGE_TAG" 
                        sh "kubectl config use-context ${STAGING_CLUSTER}"
                        sh "cd devops/helm/$HELM_CHART_NAME && helm upgrade -f values-stag.yaml ${HELM_CHART_NAME} . --install  --set image.Imagetag=$IMAGE_TAG --namespace default --wait --timeout ${HELM_TIMEOUT}"
-                    } else {
-                        echo 'I execute elsewhere'
-                    }
+                    } 
                 }
-
                     
             }
         }
 
-//         stage('Deploy') {
-//             steps {
-//                 sh '''
-//                     set -e
-//                     if [ ${BRANCH_NAME} == develop ]; then
-//                          helm repo update
-//                          kubectl config use-context trainer-stg
-//                          helm tiller run helm upgrade --install keycloak --recreate-pods omnius-stg/keycloak --version $VERSION-${BRANCH_NAME}-${BUILD_NUMBER} --set CUSTOMERNAME=omnius --set ENV=stg --set image.onpremiserepository=packages-stg.internal.omnius.com/omnius --namespace keycloak
-//                     fi
-//                     if [ ${CHANGE_BRANCH:0:8} == feature/ ] && [ ${CHANGE_TARGET} == develop ]; then
-//                         helm repo update
-//                         kubectl config use-context trainer-pr-1
-//                         helm tiller run helm upgrade --install keycloak --recreate-pods omnius-pr/keycloak --version $TAG --set CUSTOMERNAME=omnius --set ENV=pr --set image.onpremiserepository=packages-pr.internal.omnius.com/omnius --namespace keycloak
-//                     fi
-// if [ ${CHANGE_TARGET:0:8} == support/ ] && [ ${CHANGE_BRANCH:0:8} == feature/ ]; then
-//                           echo "No deployment"
-// fi
-//                 '''
-//             }
-//         }
+        stage('Approval') {
+                when {
+                      expression { env.GIT_BRANCH_NAME == "master" }
+                }
+
+                steps {
+                    script {
+                        def userInput = input(id: 'confirm', message: 'Deploy production?', parameters: [ [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Production Deployment', name: 'confirm'] ])
+                    }
+                }
+        }
+
+        stage('Helm-prod') {
+            when {
+                      expression { env.GIT_BRANCH_NAME == "master" }
+                }
+            
+            steps {
+                script {
+                    if (env.GIT_BRANCH_NAME == "master" ) {
+                       echo "${IMAGE_TAG}" 
+                       sh "echo image tag is $IMAGE_TAG" 
+                       sh "kubectl config use-context ${PROD_CLUSTER}"
+                       sh "cd devops/helm/$HELM_CHART_NAME && helm upgrade -f values-prod.yaml ${HELM_CHART_NAME} . --install  --set image.Imagetag=$IMAGE_TAG --namespace default --wait --timeout ${HELM_TIMEOUT}"
+                    } 
+                }
+                    
+            }
+        }
+
     }
     post {
         always {

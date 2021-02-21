@@ -31,9 +31,6 @@ resources:
   requests:
     memory: 200Mi
 
-# imagePullSecrets:
-# - name:  aws-ecr
-
 terminationGracePeriodSeconds: 30
 restartPolicy: Always
 revisionHistoryLimit: 10
