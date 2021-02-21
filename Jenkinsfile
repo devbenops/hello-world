@@ -26,7 +26,7 @@ pipeline {
                     elif [[ $GIT_BRANCH == 'develop' ]]; then export IMAGE_TAG="$BUILD_ID-dev"
                     elif [[ $GIT_BRANCH =~ feature-.* ]] || [[ $GIT_BRANCH =~ hotfix-.* ]]
                     then
-                    export IMAGE_TAG=$GIT_BRANCH-$BUILD_ID
+                       IMAGE_TAG=$GIT_BRANCH-$BUILD_ID
                     else
                     echo "Valid git branches for deployment- master, main, develop, feature-*, hotfix-* and :::: tags of prod-.*[0-9].*[0-9].*[0-9],stag-.*[0-9].*[0-9].*[0-9]"
                     exit 1
