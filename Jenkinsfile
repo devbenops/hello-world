@@ -79,13 +79,13 @@ popd
                 sh "$imagePush"
             stage 'Cleanup old images'
                 sh "$imageCleanUp"
-            stage('Prod-Approval') {
-                steps {
-                    script {
-                        def userInput = input(id: 'confirm', message: 'Helm Deploy Production?', parameters: [ [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Helm Deploy Production', name: 'confirm'] ])
-                    }
-                }
-            }
+            // stage('Prod-Approval') {
+            //     steps {
+            //         script {
+            //             def userInput = input(id: 'confirm', message: 'Helm Deploy Production?', parameters: [ [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Helm Deploy Production', name: 'confirm'] ])
+            //         }
+            //     }
+            // }
             stage 'Deployment'
                 sh "$deployment"
         }
