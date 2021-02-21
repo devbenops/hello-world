@@ -48,7 +48,7 @@ pipeline {
             
             steps {
                 script {
-                    if (env.BRANCH_NAME =~ feature-*) {
+                    if (env.BRANCH_NAME =~ /feature-*([a-z0-9]*)/) {
                        echo "${IMAGE_TAG}" 
                        sh "echo image tag is $IMAGE_TAG"   
                     } else {
