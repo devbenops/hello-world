@@ -36,7 +36,7 @@ pipeline {
                     sudo docker build -t $IMAGE_NAME:$IMAGE_TAG .
 
                     echo "image push"
-                    sudo aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin ${ECR_ACCOUNT}
+                    sudo aws ecr get-login-password --region eu-central-1 | sudo docker login --username AWS --password-stdin ${ECR_ACCOUNT}
                     sudo docker push $IMAGE_NAME:$IMAGE_TAG
                 '''
             }
