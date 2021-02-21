@@ -38,7 +38,9 @@ pipeline {
                     echo "image push"
                     sudo aws ecr get-login-password --region eu-central-1 | sudo docker login --username AWS --password-stdin ${ECR_ACCOUNT}
                     sudo docker push $IMAGE_NAME:$IMAGE_TAG
+
                 '''
+                env.IMAGE_TAG = $IMAGE_TAG
             }
         }
         stage('Helm') {
