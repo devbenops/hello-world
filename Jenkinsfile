@@ -48,7 +48,7 @@ pipeline {
             
             steps {
                 script {
-                    env.IMAGE_TAG = tag
+                    def env.IMAGE_TAG = tag
                 }
                 echo "${IMAGE_TAG}" 
                 sh '''#!/bin/bash -x
