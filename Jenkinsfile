@@ -52,10 +52,9 @@ pipeline {
                 script {
                     if (env.GIT_BRANCH_NAME == "feature-hello-world" ) {
                        echo "${IMAGE_TAG}" 
-                       sh "cd devops/helm/$HELM_CHART_NAME"
                        sh "echo image tag is $IMAGE_TAG" 
                        sh "kubectl config use-context ${STAGING_CLUSTER}"
-                       sh "helm upgrade -f values-stag.yaml ${HELM_CHART_NAME} . --install  --set image.Imagetag=$IMAGE_TAG --namespace default --wait --timeout ${HELM_TIMEOUT}"
+                       sh "cd devops/helm/$HELM_CHART_NAME && helm upgrade -f values-stag.yaml ${HELM_CHART_NAME} . --install  --set image.Imagetag=$IMAGE_TAG --namespace default --wait --timeout ${HELM_TIMEOUT}"
                     } else {
                         echo 'I execute elsewhere'
                     }
