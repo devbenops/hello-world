@@ -33,11 +33,11 @@ pipeline {
                     fi
 
                     echo "dockerbuild"
-                    docker build -t $IMAGE_NAME:$IMAGE_TAG .
+                    sudo docker build -t $IMAGE_NAME:$IMAGE_TAG .
 
                     echo "image push"
-                    aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin ${ECR_ACCOUNT}
-                    docker push $IMAGE_NAME:$IMAGE_TAG
+                    sudo aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin ${ECR_ACCOUNT}
+                    sudo docker push $IMAGE_NAME:$IMAGE_TAG
                 '''
             }
         }
