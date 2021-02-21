@@ -12,7 +12,7 @@ pipeline {
            
                 sh '''#!/bin/bash -x
                     set -e
-                    GIT_BRANCH=$(echo $GIT_BRANCH| awk -F "/" '{ print $2 }')
+                    GIT_BRANCH=$(echo $GIT_BRANCH| awk -F "/" '{ print $2 }') 
                     echo "BRANCH IS $GIT_BRANCH"
                     if [[ $GIT_BRANCH =~ prod-.*[0-9].*[0-9].*[0-9] ]] || [[ $GIT_BRANCH =~ stag-.*[0-9].*[0-9].*[0-9] ]]
                     then
@@ -48,7 +48,7 @@ pipeline {
             
             steps {
                 script {
-                    if (env.BRANCH_NAME == 'feature-hello-world' ) {
+                    if (env.BRANCH_NAME == 'origin/feature-hello-world' ) {
                        echo "${IMAGE_TAG}" 
                        sh "echo image tag is $IMAGE_TAG"   
                     } else {
