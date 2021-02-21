@@ -1,0 +1,8 @@
+apiVersion: v2
+appVersion: v1
+name: hello-world
+description: helloworld service
+type: application
+maintainers:
+- Email: nithinbenny444@gmail.com 
+  name: Nithin Paul

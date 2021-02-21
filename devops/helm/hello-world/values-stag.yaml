@@ -1,15 +1,13 @@
 ############## Global values #################
 deployment: 
   labels:
-    component: helloworld
+    component: hello-world
     environment: staging
 
 namespace: backend
 
 ############## Deployment values ####################
 replicaCount: 1
-
-serviceAccountName: vault-read
 
 image:
   repository: 501875964238.dkr.ecr.eu-central-1.amazonaws.com/helloworld
@@ -25,7 +23,7 @@ strategy:
     maxUnavailable: 0
 
 configMap:
-  app: helloworld-envs
+  app: hello-world-envs
 
 resources:
   limits:   

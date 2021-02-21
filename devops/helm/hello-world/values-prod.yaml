@@ -2,7 +2,7 @@
 
 deployment: 
   labels:
-    component: helloworld
+    component: hello-world
     environment: prod
 
 namespace: backend
@@ -25,7 +25,7 @@ strategy:
     maxUnavailable: 0
 
 configMap:
-  app: ing-loan-envs
+  app: hello-world-envs
 
 resources:
   limits:   
