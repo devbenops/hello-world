@@ -4,7 +4,9 @@ pipeline {
         timeout(time: 1, unit: 'HOURS')
     }
 
-
+    environment {
+     GIT_BRANCH_NAME = "${GIT_BRANCH.split("/")[1]}"
+    }
     stages {
 
         stage('Docker') {
@@ -49,7 +51,7 @@ pipeline {
             steps {
                 script {
                     sh "echo $BRANCH_NAME" 
-                    if (env.BRANCH_NAME == "feature-hello-world" ) {
+                    if (env.GIT_BRANCH_NAME == "feature-hello-world" ) {
                        echo "${IMAGE_TAG}" 
                        sh "echo image tag is $IMAGE_TAG"   
                     } else {
