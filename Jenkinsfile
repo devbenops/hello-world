@@ -48,7 +48,10 @@ pipeline {
             
             steps {
                 echo "${IMAGE_TAG}" 
-                sh "echo image tag is $IMAGE_TAG"
+                sh '''
+                    echo image tag is $IMAGE_TAG
+                '''
+
                     
             }
         }
