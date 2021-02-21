@@ -56,7 +56,7 @@ pipeline {
                        sh "echo image tag is $IMAGE_TAG" 
                        sh "kubectl config use-context ${STAGING_CLUSTER}"
                        sh "export VALUES_FILE=values-stag.yaml"
-                       sh "helm upgrade -f ${VALUES_FILE} ${HELM_CHART_NAME} . --install  --set image.Imagetag=${IMAGE_TAG} --namespace default --wait --timeout ${HELM_TIMEOUT}"
+                       sh "helm upgrade -f $VALUES_FILE ${HELM_CHART_NAME} . --install  --set image.Imagetag=${IMAGE_TAG} --namespace default --wait --timeout ${HELM_TIMEOUT}"
                     } else {
                         echo 'I execute elsewhere'
                     }
