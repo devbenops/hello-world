@@ -45,7 +45,9 @@ pipeline {
             }
         }
         stage('Helm') {
+            
             steps {
+                echo "${IMAGE_TAG}" 
                 sh '''#!/bin/bash -x
                     set -e
                     echo "image tag is ${IMAGE_TAG}"
