@@ -48,7 +48,7 @@ pipeline {
             
             steps {
                 script {
-                    if (env.BRANCH_NAME == feature-hello-world ) {
+                    if (env.BRANCH_NAME == 'feature-hello-world' ) {
                        echo "${IMAGE_TAG}" 
                        sh "echo image tag is $IMAGE_TAG"   
                     } else {
