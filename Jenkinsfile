@@ -41,14 +41,14 @@ pipeline {
                 // trim removes leading and trailing whitespace from the string
                 IMAGE_TAG = readFile('imagetag').trim()
                 }
-
+                echo "${IMAGE_TAG}" // prints 'hotness'
             }
         }
         stage('Helm') {
             steps {
                 sh '''#!/bin/bash -x
                     set -e
-                    echo "image tag is $IMAGE_TAG"
+                    echo "image tag is ${IMAGE_TAG}"
 
 
 
