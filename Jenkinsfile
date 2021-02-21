@@ -48,12 +48,12 @@ pipeline {
             
             steps {
                 script {
-                    def env.IMAGE_TAG = tag
+                    env.IMAGE_TAG = ${IMAGE_TAG}
                 }
                 echo "${IMAGE_TAG}" 
                 sh '''#!/bin/bash -x
                     set -e
-                    echo "image tag is $tag"
+                    echo "image tag is ${IMAGE_TAG}"
 
 
 
