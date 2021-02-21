@@ -47,13 +47,10 @@ pipeline {
         stage('Helm') {
             
             steps {
-                script {
-                    env.IMAGE_TAG = ${IMAGE_TAG}
-                }
                 echo "${IMAGE_TAG}" 
                 sh '''#!/bin/bash -x
                     set -e
-                    echo "image tag is ${IMAGE_TAG}"
+                    echo "image tag is $IMAGE_TAG"
 
 
 
