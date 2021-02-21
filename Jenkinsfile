@@ -47,10 +47,14 @@ pipeline {
         stage('Helm') {
             
             steps {
-                if( GIT_BRANCH ==~ feature-*) {
-                echo "${IMAGE_TAG}" 
-                sh "echo image tag is $IMAGE_TAG"   
-                } 
+                script {
+                    if (env.BRANCH_NAME =~ feature-*) {
+                       echo "${IMAGE_TAG}" 
+                       sh "echo image tag is $IMAGE_TAG"   
+                    } else {
+                        echo 'I execute elsewhere'
+                    }
+                }
 
                     
             }
