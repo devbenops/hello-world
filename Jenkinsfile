@@ -1,8 +1,5 @@
 pipeline {
-    agent {
-        label 'master'
-    }
-
+   agent any
     options {
         timeout(time: 1, unit: 'HOURS')
     }
@@ -19,14 +16,14 @@ pipeline {
                     echo "BRANCH IS $GIT_BRANCH"
                     if [[ $GIT_BRANCH =~ prod-.*[0-9].*[0-9].*[0-9] ]] || [[ $GIT_BRANCH =~ stag-.*[0-9].*[0-9].*[0-9] ]]
                     then
-                    export IMAGE_TAG=$GIT_BRANCH
+                    export IMAGE_TAG=$GIT_BRANCH && echo "$IMAGE_TAG" > imagetag
                     elif [[ $GIT_BRANCH == 'master' ]] || [[ $GIT_BRANCH == 'main' ]]
                     then 
                     export IMAGE_TAG="$BUILD_ID-rc"
                     elif [[ $GIT_BRANCH == 'develop' ]]; then export IMAGE_TAG="$BUILD_ID-dev"
                     elif [[ $GIT_BRANCH =~ feature-.* ]] || [[ $GIT_BRANCH =~ hotfix-.* ]]
                     then
-                       IMAGE_TAG=$GIT_BRANCH-$BUILD_ID
+                       IMAGE_TAG=$GIT_BRANCH-$BUILD_ID && echo "$IMAGE_TAG" > imagetag
                     else
                     echo "Valid git branches for deployment- master, main, develop, feature-*, hotfix-* and :::: tags of prod-.*[0-9].*[0-9].*[0-9],stag-.*[0-9].*[0-9].*[0-9]"
                     exit 1
@@ -40,7 +37,11 @@ pipeline {
                     sudo docker push $IMAGE_NAME:$IMAGE_TAG
 
                 '''
-                sh env.IMAGE_TAG = $IMAGE_TAG
+                script {
+                // trim removes leading and trailing whitespace from the string
+                IMAGE_TAG = readFile('imagetag').trim()
+                }
+
             }
         }
         stage('Helm') {
