@@ -50,7 +50,6 @@ pipeline {
             
             steps {
                 script {
-                    sh "echo $BRANCH_NAME" 
                     if (env.GIT_BRANCH_NAME == "feature-hello-world" ) {
                        echo "${IMAGE_TAG}" 
                        sh "echo image tag is $IMAGE_TAG"   
