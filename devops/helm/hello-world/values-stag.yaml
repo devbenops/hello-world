@@ -41,8 +41,10 @@ ingress:
   enabled: true
 
   annotations:
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nkubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/group.name: backend
+
 
   hosts:
       host: staging.helloworld.com
