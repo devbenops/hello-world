@@ -1,0 +1,15 @@
+{{- if .Values.deployment -}}
+{{- $Name := include "appName" . -}}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ $Name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      component: {{ .Values.deployment.labels.component }}
+      environment: {{ .Values.deployment.labels.environment }}
+      release: {{ .Release.Name }}
+{{- end }}

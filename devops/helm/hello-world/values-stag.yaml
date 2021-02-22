@@ -7,7 +7,7 @@ deployment:
 namespace: backend
 
 ############## Deployment values ####################
-replicaCount: 1
+replicaCount: 2
 
 image:
   repository: 501875964238.dkr.ecr.eu-central-1.amazonaws.com/helloworld
@@ -20,7 +20,7 @@ strategy:
   type: RollingUpdate
   rollingUpdate:
     maxSurge: 1
-    maxUnavailable: 0
+    maxUnavailable: 1
 
 configMap:
   app: hello-world-envs
@@ -47,9 +47,29 @@ ingress:
   hosts:
       host: staging.helloworld.com
 
-  # tls:
-  #   secretName: tls-secret
-  #   hosts: staging.helloworld.com
+  tls:
+    secretName: tls-secret
+    hosts: staging.helloworld.com
+
+#### Sec context ###
+podsecurityContext:
+  runAsUser: 2000
+  runAsGroup: 3000
+securityContext:
+  allowPrivilegeEscalation: false
+
+#### affinity ####
+
+nodeAffinity:
+ key: eks.amazonaws.com/nodegroup
+ value1: node-group-1
+
+#### hpa ####
+
+hpa:
+  minReplicas: 1
+  maxReplicas: 3
+  cpu: 50
 
 ##### service values #######
 service:

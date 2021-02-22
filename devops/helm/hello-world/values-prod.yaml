@@ -22,7 +22,7 @@ strategy:
   type: RollingUpdate
   rollingUpdate:
     maxSurge: 1
-    maxUnavailable: 0
+    maxUnavailable: 1
 
 configMap:
   app: hello-world-envs
@@ -49,9 +49,29 @@ ingress:
   hosts:
       host: helloworld.com
 
-  # tls:
-  #   secretName: tls-secret
-  #   hosts: helloworld.com
+  tls:
+    secretName: tls-secret
+    hosts: helloworld.com
+
+#### Sec context ###
+podsecurityContext:
+  runAsUser: 2000
+  runAsGroup: 3000
+securityContext:
+  allowPrivilegeEscalation: false
+
+#### affinity ####
+
+nodeAffinity:
+ key: eks.amazonaws.com/nodegroup
+ value1: node-group-1
+
+#### hpa ####
+
+hpa:
+  minReplicas: 2
+  maxReplicas: 6
+  cpu: 50
 
 ##### service values #######
 service:

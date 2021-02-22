@@ -33,6 +33,10 @@ spec:
           envFrom:
           - configMapRef:
              name: {{ .Values.configMap.app }}
+          {{- if .Values.securityContext }}
+          securityContext:
+         {{ toYaml .Values.securityContext | indent 8 }}
+          {{- end }}
           ports:
           {{- range $port := .Values.ContainerPorts }}
             - name: {{ $port.name }}
@@ -50,13 +54,24 @@ spec:
           resources:
             {{- .Values.resources | toYaml | nindent 12 }}
           {{ end }}
-    # {{- if .Values.imagePullSecrets }}
-    #   imagePullSecrets:
-    #     {{- .Values.imagePullSecrets | toYaml | nindent 6 }}
-    # {{- end }}
-    {{- if .Values.securityContext }}
+    {{- if .Values.nodeAffinity }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: {{ .Values.nodeAffinity.key }}
+                operator: In
+                values:
+                - {{ .Values.nodeAffinity.value1 }}
+      {{ end }}
+    {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- .Values.imagePullSecrets | toYaml | nindent 6 }}
+    {{- end }}
+    {{- if .Values.podsecurityContext }}
       securityContext:
-{{ toYaml .Values.securityContext | indent 8 }}
+{{ toYaml .Values.podsecurityContext | indent 8 }}
     {{- end }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       restartPolicy: {{ .Values.restartPolicy }}
